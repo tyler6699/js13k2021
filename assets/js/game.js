@@ -2,8 +2,12 @@
 // ║ JS13K Entry by @CarelessLabs  ║
 // ╚═══════════════════════════════╝
 var mg;
-var canvasW = 1232;
-var canvasH = 846;
+var canvasW;
+var canvasH;
+var border=10;
+var GAME_WIDTH = 1232;
+var GAME_HEIGHT = 846;
+var aspectRatio;
 var gameStarted = false;
 var delta = 0.0;
 var prevDelta = Date.now();
@@ -57,7 +61,7 @@ var mg = {
     document.body.insertBefore(this.canvas, document.body.childNodes[6]);
     this.frameNo = 0;
     this.interval = setInterval(updateGameArea, 20);
-    
+
     // Keyboard
     window.addEventListener('keydown', function(e) {
       e.preventDefault();
@@ -87,14 +91,15 @@ var mg = {
       if(!start && TIME>2000) start=true;
       setclicks();
     })
+    window.addEventListener('resize', resizeCanvas);
     window.addEventListener('mousemove', function(e) {
       e.preventDefault();
       var r = mg.canvas.getBoundingClientRect();
-      mousePos.set((e.clientX - r.left) / (r.right - r.left) * canvasW, 
+      mousePos.set((e.clientX - r.left) / (r.right - r.left) * canvasW,
                    (e.clientY - r.top) / (r.bottom - r.top) * canvasH);
       row = Math.floor(mousePos.y / this.scaled);
       col = Math.floor(mousePos.x / this.scaled);
-      
+
       setclicks();
     })
     // Disable right click context menu
@@ -109,7 +114,14 @@ var mg = {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }
-
+function resizeCanvas(){
+  canvasW = window.innerWidth-border;
+  canvasH = window.innerHeight-border;
+  ctx.width = canvasW;
+  ctx.height = canvasH;
+  aspectRatio = Math.min(canvasW/ GAME_WIDTH, canvasH / GAME_HEIGHT);
+  console.log("w: " + canvasW + " h: " + canvasH + " r: " + aspectRatio);
+}
 function setclicks(){
   clickedAt.set(mousePos.x, mousePos.y);
 }
@@ -130,10 +142,10 @@ function updateGameArea() {
     gameStarted=false;
     cart.genLevel(STAGE);
   }
-  
+
   if(start && TIME>2000){
     if(cart.hero != null)cart.hero.e.active=true;
-    gameStarted=true;  
+    gameStarted=true;
     if(audioCtx == null) audioCtx = new AudioContext();
   }
 
@@ -147,26 +159,29 @@ function updateGameArea() {
     // intro Screen
     mg.clear();
     ctx = mg.context;
+    resizeCanvas();
+    ctx.canvas.width  = canvasW;
+    ctx.canvas.height = canvasH;
     ctx.save();
-    drawBox(ctx,0.1,"#"+COL1,0,0,canvasW,canvasH)
-    txt = TIME>2000 ? "[ CLICK TO START ]" : "[ LOADING ]";
-    writeTxt(ctx, 1, "italic 50px Arial","WHITE",txt, 380, 720);
-    z=TIME/1600;
-    writeTxt(ctx, 1, "italic 90px Arial","WHITE","SPACE KITTY", 300+Math.cos(z)*40, 150+Math.sin(z)*20);
-    writeTxt(ctx, 1, "italic 60px Arial","WHITE","was not the imposter!", 300+Math.cos(z)*70, 200+Math.sin(z)*20);
-    
-    renderStarField(TIME);
-    
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    t = TIME/1e3;
-    x = (1232/2)-128+Math.cos(t)*40;
-    y = (846/2)-128+Math.sin(t)*20;
-    ctx.drawImage(cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208);
-    ctx.drawImage(cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256);
+    drawBox(ctx,1,"#"+COL1,0,0,canvasW,canvasH*aspectRatio)
+    // txt = TIME>2000 ? "[ CLICK TO START ]" : "[ LOADING ]";
+    // writeTxt(ctx, 1, "italic 50px Arial","WHITE",txt, 380, 720);
+    // z=TIME/1600;
+    // writeTxt(ctx, 1, "italic 90px Arial","WHITE","SPACE KITTY", 300+Math.cos(z)*40, 150+Math.sin(z)*20);
+    // writeTxt(ctx, 1, "italic 60px Arial","WHITE","was not the imposter!", 300+Math.cos(z)*70, 200+Math.sin(z)*20);
+
+    // renderStarField(TIME);
+    //
+    // ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // t = TIME/1e3;
+    // x = (1232/2)-128+Math.cos(t)*40;
+    // y = (846/2)-128+Math.sin(t)*20;
+    // ctx.drawImage(cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208);
+    //ctx.drawImage(cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256);
   } else if(cart.hero.levelUp && STAGE <= 4){
     mg.clear();
     warp(TIME/100);
-    t = TIME/1e3;  
+    t = TIME/1e3;
     x = (1232/2)-128+Math.cos(t)*40;
     y = (846/2)-128+Math.sin(t)*20;
     ctx.globalAlpha = 1;
