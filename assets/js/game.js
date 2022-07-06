@@ -5,8 +5,8 @@ var mg;
 var canvasW;
 var canvasH;
 var border=10;
-var GAME_WIDTH = 1232;
-var GAME_HEIGHT = 846;
+var GAME_WIDTH = 800;
+var GAME_HEIGHT = 600;
 var aspectRatio;
 var gameStarted = false;
 var delta = 0.0;
@@ -47,13 +47,11 @@ function startGame() {
 var mg = {
   canvas: document.createElement("canvas"),
   start: function() {
-    this.canvas.width = canvasW;
-    this.canvas.height = canvasH;
     this.context = this.canvas.getContext("2d");
     this.context.scale(1, 1);
-
     // PixelArt Sharp
     ctx=this.context;
+    resizeCanvas();
     ctx.mozImageSmoothingEnabled = false;
     ctx.webkitImageSmoothingEnabled = false;
     ctx.imageSmoothingEnabled = false;
@@ -117,10 +115,17 @@ var mg = {
 function resizeCanvas(){
   canvasW = window.innerWidth-border;
   canvasH = window.innerHeight-border;
-  ctx.width = canvasW;
-  ctx.height = canvasH;
-  aspectRatio = Math.min(canvasW/ GAME_WIDTH, canvasH / GAME_HEIGHT);
-  console.log("w: " + canvasW + " h: " + canvasH + " r: " + aspectRatio);
+  aspectRatio = canvasH / GAME_HEIGHT;
+
+  if(ctx.canvas.width >= canvasW){
+    aspectRatio = canvasW/ GAME_WIDTH;
+  }
+  
+  ctx.canvas.width = GAME_WIDTH * aspectRatio;
+  ctx.canvas.height = GAME_HEIGHT * aspectRatio;
+  console.log("Canvas width: " + ctx.canvas.width + " Screen Width: " + canvasW);
+  console.log("Canvas height: " + ctx.canvas.height + " Screen Height: " + canvasH);
+  ctx.save;
 }
 function setclicks(){
   clickedAt.set(mousePos.x, mousePos.y);
@@ -159,11 +164,11 @@ function updateGameArea() {
     // intro Screen
     mg.clear();
     ctx = mg.context;
-    resizeCanvas();
-    ctx.canvas.width  = canvasW;
-    ctx.canvas.height = canvasH;
     ctx.save();
-    drawBox(ctx,1,"#"+COL1,0,0,canvasW,canvasH*aspectRatio)
+    var tH = GAME_HEIGHT*aspectRatio;
+    var tW = GAME_WIDTH*aspectRatio;
+    var b= 100* aspectRatio;
+    drawBox(ctx,1,"#"+COL1,0,0,tW,tH);
     // txt = TIME>2000 ? "[ CLICK TO START ]" : "[ LOADING ]";
     // writeTxt(ctx, 1, "italic 50px Arial","WHITE",txt, 380, 720);
     // z=TIME/1600;
