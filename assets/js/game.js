@@ -48,13 +48,9 @@ var mg = {
   canvas: document.createElement("canvas"),
   start: function() {
     this.context = this.canvas.getContext("2d");
-    this.context.scale(1, 1);
-    // PixelArt Sharp
     ctx=this.context;
+    ctx.scale(1, 1);
     resizeCanvas();
-    ctx.mozImageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
-    ctx.imageSmoothingEnabled = false;
     this.canvas.classList.add("screen");
     document.body.insertBefore(this.canvas, document.body.childNodes[6]);
     this.frameNo = 0;
@@ -113,6 +109,7 @@ var mg = {
   }
 }
 function resizeCanvas(){
+  // Needs to handle screens smaller than 800x600
   canvasW = window.innerWidth-border;
   canvasH = window.innerHeight-border;
   aspectRatio = canvasH / GAME_HEIGHT;
@@ -120,11 +117,14 @@ function resizeCanvas(){
   if(ctx.canvas.width >= canvasW){
     aspectRatio = canvasW/ GAME_WIDTH;
   }
-  
+
   ctx.canvas.width = GAME_WIDTH * aspectRatio;
   ctx.canvas.height = GAME_HEIGHT * aspectRatio;
   console.log("Canvas width: " + ctx.canvas.width + " Screen Width: " + canvasW);
   console.log("Canvas height: " + ctx.canvas.height + " Screen Height: " + canvasH);
+  ctx.mozImageSmoothingEnabled = false;
+  ctx.webkitImageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = false;
   ctx.save;
 }
 function setclicks(){
@@ -165,24 +165,23 @@ function updateGameArea() {
     mg.clear();
     ctx = mg.context;
     ctx.save();
-    var tH = GAME_HEIGHT*aspectRatio;
-    var tW = GAME_WIDTH*aspectRatio;
     var b= 100* aspectRatio;
-    drawBox(ctx,1,"#"+COL1,0,0,tW,tH);
-    // txt = TIME>2000 ? "[ CLICK TO START ]" : "[ LOADING ]";
-    // writeTxt(ctx, 1, "italic 50px Arial","WHITE",txt, 380, 720);
+    drawBox(ctx,0.5,"#"+COL1,0,0,100,200);
+    txt = "[ CLICK TO START ]";
+    writeTxt(ctx, 1, "italic 50px Arial","WHITE",txt, 100, 100);
+
     // z=TIME/1600;
     // writeTxt(ctx, 1, "italic 90px Arial","WHITE","SPACE KITTY", 300+Math.cos(z)*40, 150+Math.sin(z)*20);
     // writeTxt(ctx, 1, "italic 60px Arial","WHITE","was not the imposter!", 300+Math.cos(z)*70, 200+Math.sin(z)*20);
 
     // renderStarField(TIME);
     //
-    // ctx.setTransform(1, 0, 0, 1, 0, 0);
-    // t = TIME/1e3;
-    // x = (1232/2)-128+Math.cos(t)*40;
-    // y = (846/2)-128+Math.sin(t)*20;
-    // ctx.drawImage(cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208);
-    //ctx.drawImage(cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256);
+     ctx.setTransform(1, 0, 0, 1, 0, 0);
+     t = TIME/1e3;
+     x = (1232/2)-128+Math.cos(t)*40;
+     y = (846/2)-128+Math.sin(t)*20;
+    ctx.drawImage(cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208);
+    ctx.drawImage(cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256);
   } else if(cart.hero.levelUp && STAGE <= 4){
     mg.clear();
     warp(TIME/100);
@@ -207,14 +206,14 @@ function updateGameArea() {
 function drawBox(ctx,a,colour,x,y,w,h) {
   ctx.globalAlpha = a;
   ctx.fillStyle = colour;
-  ctx.fillRect(x, y, w, h);
+  ctx.fillRect(x*aspectRatio, y*aspectRatio, w*aspectRatio, h*aspectRatio);
 }
 
 function writeTxt(ctx,a,font,colour,txt,x,y) {
   ctx.globalAlpha = a;
   ctx.font = font;
   ctx.fillStyle = colour;
-  ctx.fillText(txt, x, y);
+  ctx.fillText(txt, x*aspectRatio, y*aspectRatio);
 }
 
 function left() {
