@@ -2,10 +2,6 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.scale = scale;
   this.type = type;
   this.type2 = null;
-  this.renT2 = false;
-  this.type3 = null;
-  this.t3yOff=0;
-  this.renT3 = false;
   this.width = w;
   this.height = h;
   this.mhWidth = w / -2;
@@ -22,15 +18,11 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.colour = colour;
   this.image = atlas;
   this.animated = false;
-  this.anination = null;
   this.alpha = 1;
   this.currentTile=0;
   this.colArr = [];
   this.isSolid = false;
   this.isButton = isButton;
-  this.pc = null;
-  this.gun = null;
-  this.ammo = 5;
   this.time=0;
   this.showText="";
   this.showTextTime=0;
@@ -42,7 +34,7 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.breaks=false;
   this.flip=false;
   this.idle=0;
-  
+
   // ATLAS Positions
   this.sx=0;
   this.sy=0;
@@ -80,13 +72,13 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.update = function(delta) {
     this.idle+=delta;
     this.updateHitbox();
-    
+
     if(this.active && !this.isFloor()) {
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(this.angle);
       ctx.globalAlpha = this.alpha;
-      
+
       img = this.image;
       s   = this.scale;
       mhw = this.mhWidth;
@@ -95,12 +87,12 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
       hh  = this.hHeight;
       w   = this.width;
       h   = this.height;
-      
+
       if(cart.shakeTime>0){
         cart.shakeTime-=delta/1000;
         ctx.translate(cart.shake,cart.shake);
       }
-      
+
       ctx.save();
       // Animate Image
       if (this.image == null) {
@@ -113,34 +105,13 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
           ctx.translate(-80,0);
         } else {
           ctx.scale(1, 1);
-        } 
+        }
         f=0; // float
         z=0; // hover
-        if(this.type == types.BOT){
-          f=Math.sin(TIME/500)*10;
-          z=Math.cos(TIME/700)*5;
-          ctx.drawImage(img, 97, 56, 7, 2, w+hw+z, h*5, 30, 10);
-        }
+
         ctx.drawImage(img, this.sx, this.sy, w, h, hw+z, hh+f, w * s, h * s);
       }
       ctx.restore();
-      
-      // Moving Doors
-      if(this.type2 != null && this.mvY != 0){
-        ctx.translate(0,-48+this.mvY);
-        ctx.drawImage(img, 0, 16, w, h, hw, hh, w * s, h * s);
-        ctx.translate(0,48-this.mvY);
-        ctx.drawImage(img, this.sx, this.sy, w, h, hw, hh, w * s, h * s);
-      } else if(this.type3 != null && this.mvY != 0){
-        ctx.translate(0,64-(48-this.mvY));
-        ctx.drawImage(img, 112, 16, w, h, hw, hh, w * s, h * s);
-        ctx.translate(0,-64+(48-this.mvY));
-        ctx.drawImage(img, this.sx, this.sy, w, h, hw, hh, w * s, h * s);
-      } else if (this.type2 != null && this.renT2) {
-        ctx.globalAlpha = 1;
-        ctx.translate(0,-48);
-        ctx.drawImage(img, 0, 16, w, h, hw, hh, w * s, h * s);
-      }
 
       // SHOW TEXT
       if(this.showTextTime>0){
@@ -160,62 +131,32 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.isHero = function(){
     return this.type == types.HERO;
   }
-  
-  this.isDoor = function(){
-    return (this.type == types.DOOR || this.type == types.DOOR_BLOCK || this.type == types.DOOR_WALL);
-  }
-  
-  this.isDoorWall = function(){
-    return this.type == types.DOOR_WALL;
-  }
-  
-  this.isDoorTop = function(){
-    return this.type == types.DOOR_BLOCK;
-  }
-  
-  this.isBarrel = function(){
-    return this.type == types.BARREL;
-  }
-  
-  this.isTree = function(){
-    return this.type == types.TREE;
-  }
-  
+
   this.isTile = function(){
     return false;
   }
-  
-  this.isAmmo = function(){
-    return this.type == types.AMMO;
-  }
-  
+
+
   this.isHP= function(){
     return this.type == types.HP;
   }
-  
-  this.isUpgrade = function(){
-    return this.type == types.UPGRADE;
-  }
-  
+
   this.setT = function(t){
     this.type = t;
     this.setType();
   }
-  
+
   this.isFloor = function(){
     return this.type == types.FLOOR;
   }
-  
-  this.isPortal = function(){
-    return this.type == types.PC;
-  }
+
 
   this.setType = function(){
     this.alpha = 1;
     this.sy=0;
     this.sx=0;
     this.isSolid = false;
-    
+
     switch(this.type) {
       case types.HERO:
         this.isSolid = true;
@@ -237,17 +178,6 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
       case types.AIR:
         this.sx=144;
         break;
-      case types.DOOR:
-        this.sx=144;
-        break;
-      case types.DOOR_BLOCK:
-        this.isSolid = true;
-        this.sx=112;
-        break;
-      case types.DOOR_WALL:
-        this.sy=16;
-        this.sx=112;
-        break;
       case types.GRID_1:
         this.sx=96;
         this.sy=32;
@@ -264,31 +194,6 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
         this.sx=48;
         this.sy=32;
         break;
-      case types.ROCK_1:
-        this.sx=48;
-        break;
-      case types.ROCK_2:
-        this.sx=64;
-        break;
-      case types.ROCK_3:
-        this.sx=80;
-        break;
-      case types.ROCK_4:
-        this.sx=96;
-        break;
-      case types.BARREL:
-        this.isSolid = true;
-        this.hp=3;
-        this.breaks=true;
-        this.sx=48;
-        this.sy=16;
-        break;
-      case types.TREE:
-        this.isSolid = true;
-        this.breaks=true;
-        this.sx=16;
-        this.sy=32;
-        break;
       case types.CUBE:
         this.isSolid = true;
         this.hp=5;
@@ -296,33 +201,10 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
         this.sx=32;
         this.sy=16;
         break;
-      case types.PC:
-        this.sx=80;
-        this.sy=16;
-        break;
-      case types.AMMO:
-        this.sx=64;
-        this.sy=32;
-        break;
-      case types.UPGRADE:
-        this.sx=48;
-        this.sy=48;
-        break;
-      case types.BOT:
-        this.isSolid = true;
-        this.sx=80;
-        this.sy=48;
-        break;
-      case types.TNY:
-        this.isSolid = true;
-        xs=[96,105,114]
-        this.sx=xs[rndNo(0,2)];
-        this.sy=48;
-        break;
       case types.HP:
         break;
      }
   }
-  
+
   this.setType();
 }

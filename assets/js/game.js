@@ -1,6 +1,7 @@
 // ╔═══════════════════════════════╗
 // ║ JS13K Entry by @CarelessLabs  ║
 // ╚═══════════════════════════════╝
+var scale = 1;
 var mg;
 var canvasW;
 var canvasH;
@@ -108,25 +109,7 @@ var mg = {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }
-function resizeCanvas(){
-  // Needs to handle screens smaller than 800x600
-  canvasW = window.innerWidth-border;
-  canvasH = window.innerHeight-border;
-  aspectRatio = canvasH / GAME_HEIGHT;
 
-  if(ctx.canvas.width >= canvasW){
-    aspectRatio = canvasW/ GAME_WIDTH;
-  }
-
-  ctx.canvas.width = GAME_WIDTH * aspectRatio;
-  ctx.canvas.height = GAME_HEIGHT * aspectRatio;
-  console.log("Canvas width: " + ctx.canvas.width + " Screen Width: " + canvasW);
-  console.log("Canvas height: " + ctx.canvas.height + " Screen Height: " + canvasH);
-  ctx.mozImageSmoothingEnabled = false;
-  ctx.webkitImageSmoothingEnabled = false;
-  ctx.imageSmoothingEnabled = false;
-  ctx.save;
-}
 function setclicks(){
   clickedAt.set(mousePos.x, mousePos.y);
 }
@@ -136,7 +119,6 @@ function updateGameArea() {
     TIME=0;
     var h = cart.hero;
     h.e.hp=100;
-    h.e.gun = new Gun();
     h.roomsDone = 0;
     h.levelUpTime=0;
     h.levelUp=false;
@@ -174,14 +156,14 @@ function updateGameArea() {
     // writeTxt(ctx, 1, "italic 90px Arial","WHITE","SPACE KITTY", 300+Math.cos(z)*40, 150+Math.sin(z)*20);
     // writeTxt(ctx, 1, "italic 60px Arial","WHITE","was not the imposter!", 300+Math.cos(z)*70, 200+Math.sin(z)*20);
 
-    // renderStarField(TIME);
-    //
-     ctx.setTransform(1, 0, 0, 1, 0, 0);
-     t = TIME/1e3;
-     x = (1232/2)-128+Math.cos(t)*40;
-     y = (846/2)-128+Math.sin(t)*20;
-    ctx.drawImage(cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208);
-    ctx.drawImage(cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256);
+    renderStarField(TIME);
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    t = TIME/1e3;
+    x = (1232/2)-128+Math.cos(t)*40;
+    y = (846/2)-128+Math.sin(t)*20;
+    drawImage(ctx, cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208, scale, 1);
+    drawImage(ctx, cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256, scale, 1);
   } else if(cart.hero.levelUp && STAGE <= 4){
     mg.clear();
     warp(TIME/100);
@@ -189,8 +171,8 @@ function updateGameArea() {
     x = (1232/2)-128+Math.cos(t)*40;
     y = (846/2)-128+Math.sin(t)*20;
     ctx.globalAlpha = 1;
-    ctx.drawImage(cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208);
-    ctx.drawImage(cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256);
+
+    drawImage(ctx, cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256, scale, 1);
     cart.hero.levelUpTime+=delta/1000;
     if(cart.hero.levelUpTime>2){
       cart.hero.levelUpTime=0;
@@ -201,19 +183,6 @@ function updateGameArea() {
     mg.clear();
     cart.update(delta / 1e3, TIME);
   }
-}
-
-function drawBox(ctx,a,colour,x,y,w,h) {
-  ctx.globalAlpha = a;
-  ctx.fillStyle = colour;
-  ctx.fillRect(x*aspectRatio, y*aspectRatio, w*aspectRatio, h*aspectRatio);
-}
-
-function writeTxt(ctx,a,font,colour,txt,x,y) {
-  ctx.globalAlpha = a;
-  ctx.font = font;
-  ctx.fillStyle = colour;
-  ctx.fillText(txt, x*aspectRatio, y*aspectRatio);
 }
 
 function left() {

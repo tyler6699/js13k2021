@@ -7,33 +7,11 @@ const types = {
   GRID_3:6,
   GRID_4:7,
   WALL:8,
-  ROCK_1:9,
-  ROCK_2:10,
-  ROCK_3:12,
-  ROCK_4:13,
-  DOOR:14,
-  DOOR_BLOCK:15,
-  DOOR_WALL:16,
-  BARREL:17,
-  TREE:18,
-  CUBE:19,
-  PC:20,
-  AMMO:21,
-  UPGRADE:22,
-  BOT:23,
-  TNY:24,
   HP:25
 }
 
 const actions = {
-  GUN:0,
-  DESK:1,
-  CHAIR:2,
-  PC:3,
-  SERVER:4,
-  VEND:5,
-  AUTO:6,
-  UP:7
+
 }
 
 const mobtype = {

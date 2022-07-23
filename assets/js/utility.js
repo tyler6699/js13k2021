@@ -54,7 +54,7 @@ function rectColiding(rec1, rec2) {
 function vec2(x,y){
   this.x = x;
   this.y = y;
-  
+
   this.set = function(x,y) {
     this.x = x;
     this.y = y;
@@ -78,12 +78,27 @@ function warp(t) {
     Z=2**Math.tan(i/9+t/3)
 }
 
+function drawImage(c, image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight, scale, alpha){
+  c.save();
+  c.globalAlpha = alpha;
+  //c.translate(x, y); Why is this used for the mobs?
+  c.drawImage(image, sx, sy, sWidth, sHeight, dx*aspectRatio, dy*aspectRatio, dWidth*aspectRatio, dHeight*aspectRatio);
+  c.restore();
+}
+
+// TODO: Remove?
 function drawImg(ctx, img, sx, sy, w, h, x, y, alpha, scale){
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.translate(x, y);
-  ctx.drawImage(img, sx, sy, w, h, w/2, h/2, w * scale, h * scale);
+  ctx.drawImage(img, sx, sy, w, h, w/2*scale, h/2*scale, w * scale, h * scale);
   ctx.restore();
+}
+
+function drawBox(ctx,a,colour,x,y,w,h) {
+  ctx.globalAlpha = a;
+  ctx.fillStyle = colour;
+  ctx.fillRect(x*aspectRatio, y*aspectRatio, w*aspectRatio, h*aspectRatio);
 }
 
 function drawRect(ctx, ox, oy, x, y, w, h, col, alpha){
@@ -93,4 +108,31 @@ function drawRect(ctx, ox, oy, x, y, w, h, col, alpha){
   ctx.fillStyle = col;
   ctx.fillRect(x,y,w,h);
   ctx.restore();
+}
+
+function writeTxt(ctx,a,font,colour,txt,x,y) {
+  ctx.globalAlpha = a;
+  ctx.font = font;
+  ctx.fillStyle = colour;
+  ctx.fillText(txt, x*aspectRatio, y*aspectRatio);
+}
+
+function resizeCanvas(){
+  // Needs to handle screens smaller than 800x600
+  canvasW = window.innerWidth-border;
+  canvasH = window.innerHeight-border;
+  aspectRatio = canvasH / GAME_HEIGHT;
+
+  if(ctx.canvas.width >= canvasW){
+    aspectRatio = canvasW/ GAME_WIDTH;
+  }
+
+  ctx.canvas.width = GAME_WIDTH * aspectRatio;
+  ctx.canvas.height = GAME_HEIGHT * aspectRatio;
+  console.log("Canvas width: " + ctx.canvas.width + " Screen Width: " + canvasW);
+  console.log("Canvas height: " + ctx.canvas.height + " Screen Height: " + canvasH);
+  ctx.mozImageSmoothingEnabled = false;
+  ctx.webkitImageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = false;
+  ctx.save;
 }
