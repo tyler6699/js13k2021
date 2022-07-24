@@ -38,7 +38,6 @@ function hero(w, h, x, y, angle, type, scale) {
 
       // Add surrounding tiles
       cart.surTiles.forEach(e => this.e.colArr.push(cart.level.tiles[heroTileIndex+e]));
-      cart.level.mobs.forEach(e => this.e.colArr.push(e.entity));
     }
   }
 

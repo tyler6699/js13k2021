@@ -3,7 +3,6 @@ function Tile(size, x, y, angle, type, solid, column, row, scale) {
   this.column = column;
   this.row = row;
   this.active = true;
-  this.door = null;
 
   this.update = function(delta) {
     this.entity.update(delta);
@@ -16,16 +15,8 @@ function Tile(size, x, y, angle, type, solid, column, row, scale) {
     this.entity.setType();
   }
 
-  this.doorSet = function(){
-    return this.door != null;
-  }
-
   this.isTile = function(){
     return true;
-  }
-
-  this.isDoor = function(){
-    return this.door != null;
   }
 
 }

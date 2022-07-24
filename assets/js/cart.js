@@ -62,7 +62,7 @@ function Cart() {
     renderStarField(TIME);
 
     // Render back
-    drawRect(ctx, 80, 120, 0, 0, 1080, 710, this.bkcol, .8);
+    drawRect(ctx, 80, 120, 0, 0, 16*this.scaled, 10*this.scaled, this.bkcol, .8);
 
     this.level.draw(this.hero.e, delta);
 
