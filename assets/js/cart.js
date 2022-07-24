@@ -1,5 +1,20 @@
 function Cart() {
-  this.scale = 4;
+  // Testing making the game fit the screen
+  var totalWidth = 1216; // Tiles are 16x16 scaled up by 4 with 19 columns
+  var totalHeight = 832; // 13 Rows
+  var widthToHeight = 4 / 3;
+  var newWidthToHeight = canvasW / canvasH;
+  var ratio=0;
+
+  if (newWidthToHeight > widthToHeight) {
+    canvasW = canvasH * widthToHeight;
+    ratio=canvasW / totalWidth;
+  } else {
+    canvasH = canvasW / widthToHeight;
+    ratio=canvasH / totalHeight;
+  }
+
+  this.scale = 4*ratio;
   this.cube = 16; // width of tiles
   this.scaled = this.scale*this.cube;
   this.hero = new hero(16, 16, canvasW/2, canvasH/2, 0, types.HERO, this.scale);
@@ -9,14 +24,14 @@ function Cart() {
   this.shakeTime=0;
   this.reset=false;
   this.wait=2;
-    
+
   this.genLevel = function(num){
     if(num == 5){
       speak("BOSS LEVEL");
       this.levels = [];
       var lvl = new level(num, canvasW, canvasH, i, this.scale, true);
       lvl.reset(i, this.scaled);
-      this.levels.push(lvl);  
+      this.levels.push(lvl);
       this.level = lvl;
     } else {
       this.bkcol = ranColor();
@@ -26,21 +41,21 @@ function Cart() {
         lvl.reset(i, this.scaled);
         this.levels.push(lvl);
       }
-      this.level = this.levels[0];  
+      this.level = this.levels[0];
       this.hero.e.currentLevel = 0;
     }
   }
-  
+
   this.genLevel(0);
 
   // Render & Logic
   this.update = function(delta, time) {
     // Screen shake
     this.shake = shaky ? Math.cos(TIME) : 0;
-    
+
     // Track Hero Door collisions
     this.door = null;
-    
+
     // Controls
     if (left()){
       this.hero.e.x -= this.hero.gMove(-1,0);
@@ -57,13 +72,13 @@ function Cart() {
     this.hero.checkDoor();
     this.hero.setCurrentTile(this.scaled);
     this.hero.checkGun();
-        
+
     // Render
     renderStarField(TIME);
-    
+
     // Render back
     drawRect(ctx, 80, 120, 0, 0, 1080, 710, this.bkcol, .8);
-    
+
     this.level.draw(this.hero.e, delta);
 
     // Draw Text
@@ -96,7 +111,7 @@ function Cart() {
     h=mh*2;
     ctx.fillRect(mx-mw,my-mh,w,h);
     ctx.fillRect(mx-mh,my-mw,h,w);
-    
+
     if(this.introT > 0){
       for(i = 0;i <= canvasW/33;i++){
         for(j = 0;j <= canvasH/33;j++){
@@ -111,18 +126,18 @@ function Cart() {
       }
       this.introT -= delta*48;
     }
-    
+
     // Clear dead Mobs
     this.level.mobs = this.level.mobs.filter(function (m) {
       return m.entity.active == true;
     });
-    
+
     // Ceck if the doors can open
     if(this.level.mobs.length == 0 && !this.level.gatesOpen){
       this.level.openDoors();
       if(this.hero.roomsDone>=0)this.hero.roomsDone++;
     }
-    
+
     // Level Done Condition
     if(STAGE==5 && this.level.mobs.length==0){
       WIN=true;
@@ -133,10 +148,10 @@ function Cart() {
         this.reset=true;
         this.wait=3;
       }
-      
+
       if(this.wait<=0&& this.reset) GAMEOVER=true;
     }
-    
+
     if(this.hero.roomsDone==9 && !l.showPortal && STAGE < 5){
       l = this.levels[this.hero.e.currentLevel];
       l.showPortal = true;
@@ -146,23 +161,23 @@ function Cart() {
       tile.entity.setType();
       speak("Terminal Available.");
     }
-    
+
     if (map()) this.renderMap();
     this.renderHP();
   }
-  
+
   this.renderHP = function(){
     ctx.save();
     ctx.translate(0, 0);
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#001832";
-    ctx.fillRect(20, 20, 300, 40);     
+    ctx.fillRect(20, 20, 300, 40);
     ctx.fillStyle = "#a12161";
     l = this.hero.e.hp * 2.8;
-    ctx.fillRect(30, 30, l, 20); 
+    ctx.fillRect(30, 30, l, 20);
     ctx.restore();
   }
-  
+
   this.renderMap = function(){
     ctx.save();
     ctx.translate(0, 0);
@@ -170,7 +185,7 @@ function Cart() {
     ctx.fillStyle = "WHITE";
     offX = (canvasW/2) - 180;
     offY = (canvasH/2) - 180;
-    
+
     this.levels.forEach((l, i) => {
       var X = (i % 3) * 120;
       var Y = Math.floor(i / 3) * 120;
@@ -182,7 +197,7 @@ function Cart() {
         ctx.fillStyle="BLACK";
         ctx.fillRect(X+offX+(this.hero.e.x*0.065), Y+offY+(this.hero.e.y*0.095), 20, 20);
       }
-    });      
+    });
     ctx.restore();
   }
 }

@@ -2,8 +2,8 @@
 // ║ JS13K Entry by @CarelessLabs  ║
 // ╚═══════════════════════════════╝
 var mg;
-var canvasW = 1232;
-var canvasH = 846;
+var canvasW = window.innerWidth;
+var canvasH = window.innerHeight;
 var gameStarted = false;
 var delta = 0.0;
 var prevDelta = Date.now();
@@ -57,7 +57,7 @@ var mg = {
     document.body.insertBefore(this.canvas, document.body.childNodes[6]);
     this.frameNo = 0;
     this.interval = setInterval(updateGameArea, 20);
-    
+
     // Keyboard
     window.addEventListener('keydown', function(e) {
       e.preventDefault();
@@ -87,14 +87,15 @@ var mg = {
       if(!start && TIME>2000) start=true;
       setclicks();
     })
+    //window.addEventListener('resize', resizeCanvas);
     window.addEventListener('mousemove', function(e) {
       e.preventDefault();
       var r = mg.canvas.getBoundingClientRect();
-      mousePos.set((e.clientX - r.left) / (r.right - r.left) * canvasW, 
+      mousePos.set((e.clientX - r.left) / (r.right - r.left) * canvasW,
                    (e.clientY - r.top) / (r.bottom - r.top) * canvasH);
       row = Math.floor(mousePos.y / this.scaled);
       col = Math.floor(mousePos.x / this.scaled);
-      
+
       setclicks();
     })
     // Disable right click context menu
@@ -130,10 +131,10 @@ function updateGameArea() {
     gameStarted=false;
     cart.genLevel(STAGE);
   }
-  
+
   if(start && TIME>2000){
     if(cart.hero != null)cart.hero.e.active=true;
-    gameStarted=true;  
+    gameStarted=true;
     if(audioCtx == null) audioCtx = new AudioContext();
   }
 
@@ -154,9 +155,9 @@ function updateGameArea() {
     z=TIME/1600;
     writeTxt(ctx, 1, "italic 90px Arial","WHITE","SPACE KITTY", 300+Math.cos(z)*40, 150+Math.sin(z)*20);
     writeTxt(ctx, 1, "italic 60px Arial","WHITE","was not the imposter!", 300+Math.cos(z)*70, 200+Math.sin(z)*20);
-    
+
     renderStarField(TIME);
-    
+
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     t = TIME/1e3;
     x = (1232/2)-128+Math.cos(t)*40;
@@ -166,7 +167,7 @@ function updateGameArea() {
   } else if(cart.hero.levelUp && STAGE <= 4){
     mg.clear();
     warp(TIME/100);
-    t = TIME/1e3;  
+    t = TIME/1e3;
     x = (1232/2)-128+Math.cos(t)*40;
     y = (846/2)-128+Math.sin(t)*20;
     ctx.globalAlpha = 1;

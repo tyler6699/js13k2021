@@ -54,7 +54,7 @@ function rectColiding(rec1, rec2) {
 function vec2(x,y){
   this.x = x;
   this.y = y;
-  
+
   this.set = function(x,y) {
     this.x = x;
     this.y = y;
@@ -93,4 +93,28 @@ function drawRect(ctx, ox, oy, x, y, w, h, col, alpha){
   ctx.fillStyle = col;
   ctx.fillRect(x,y,w,h);
   ctx.restore();
+}
+
+function resizeCanvas(){
+  // Needs to handle screens smaller than 800x600
+  var totalWidth = 1216; // Tiles are 16x16 scaled up by 4 with 19 columns
+  var totalHeight = 832; // 13 Rows
+
+  canvasW = window.innerWidth;
+  canvasH = window.innerHeight;
+
+  var widthToHeight = 4 / 3;
+  var newWidthToHeight = canvasW / canvasH;
+  var ratio=0;
+
+  if (newWidthToHeight > widthToHeight) {
+    canvasW = canvasH * widthToHeight;
+    ratio=canvasW / totalWidth;
+  } else {
+    canvasH = canvasW / widthToHeight;
+    ratio=canvasH / totalHeight;
+  }
+
+  cart.scale = ratio * 4;
+  //console.log(cart.scale);
 }
