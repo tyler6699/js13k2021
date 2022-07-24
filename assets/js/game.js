@@ -120,10 +120,6 @@ function updateGameArea() {
     TIME=0;
     var h = cart.hero;
     h.e.hp=100;
-    h.e.gun = new Gun();
-    h.roomsDone = 0;
-    h.levelUpTime=0;
-    h.levelUp=false;
     GAMEOVER=false;
     WIN=false;
     STAGE=0;
@@ -155,30 +151,6 @@ function updateGameArea() {
     z=TIME/1600;
     writeTxt(ctx, 1, "italic 90px Arial","WHITE","SPACE KITTY", 300+Math.cos(z)*40, 150+Math.sin(z)*20);
     writeTxt(ctx, 1, "italic 60px Arial","WHITE","was not the imposter!", 300+Math.cos(z)*70, 200+Math.sin(z)*20);
-
-    renderStarField(TIME);
-
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    t = TIME/1e3;
-    x = (1232/2)-128+Math.cos(t)*40;
-    y = (846/2)-128+Math.sin(t)*20;
-    ctx.drawImage(cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208);
-    ctx.drawImage(cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256);
-  } else if(cart.hero.levelUp && STAGE <= 4){
-    mg.clear();
-    warp(TIME/100);
-    t = TIME/1e3;
-    x = (1232/2)-128+Math.cos(t)*40;
-    y = (846/2)-128+Math.sin(t)*20;
-    ctx.globalAlpha = 1;
-    ctx.drawImage(cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208);
-    ctx.drawImage(cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256);
-    cart.hero.levelUpTime+=delta/1000;
-    if(cart.hero.levelUpTime>2){
-      cart.hero.levelUpTime=0;
-      cart.hero.levelUp=false;
-      speak("level " + STAGE + " completed.");
-    }
   } else {
     mg.clear();
     cart.update(delta / 1e3, TIME);

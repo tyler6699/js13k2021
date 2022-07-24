@@ -1,9 +1,4 @@
 // Useful Functions and classes
-// function setHeroText(text){
-//   cart.hero.showTextY=-15;
-//   cart.hero.showTextTime=TEXTTIME/2;
-//   cart.hero.showText=text;
-// }
 
 function rectanlge(x, y, w, h) {
   this.x = x;

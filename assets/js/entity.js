@@ -1,11 +1,6 @@
 function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP = 0) {
   this.scale = scale;
   this.type = type;
-  this.type2 = null;
-  this.renT2 = false;
-  this.type3 = null;
-  this.t3yOff=0;
-  this.renT3 = false;
   this.width = w;
   this.height = h;
   this.mhWidth = w / -2;
@@ -22,15 +17,11 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.colour = colour;
   this.image = atlas;
   this.animated = false;
-  this.anination = null;
   this.alpha = 1;
   this.currentTile=0;
   this.colArr = [];
   this.isSolid = false;
   this.isButton = isButton;
-  this.pc = null;
-  this.gun = null;
-  this.ammo = 5;
   this.time=0;
   this.showText="";
   this.showTextTime=0;
@@ -38,11 +29,10 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.shootTime=0;
   this.maxHP=maxHP;
   this.hp=this.maxHP;
-  this.mvY=0;
   this.breaks=false;
   this.flip=false;
   this.idle=0;
-  
+
   // ATLAS Positions
   this.sx=0;
   this.sy=0;
@@ -80,13 +70,13 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.update = function(delta) {
     this.idle+=delta;
     this.updateHitbox();
-    
+
     if(this.active && !this.isFloor()) {
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(this.angle);
       ctx.globalAlpha = this.alpha;
-      
+
       img = this.image;
       s   = this.scale;
       mhw = this.mhWidth;
@@ -95,12 +85,12 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
       hh  = this.hHeight;
       w   = this.width;
       h   = this.height;
-      
+
       if(cart.shakeTime>0){
         cart.shakeTime-=delta/1000;
         ctx.translate(cart.shake,cart.shake);
       }
-      
+
       ctx.save();
       // Animate Image
       if (this.image == null) {
@@ -113,34 +103,13 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
           ctx.translate(-80,0);
         } else {
           ctx.scale(1, 1);
-        } 
+        }
         f=0; // float
         z=0; // hover
-        if(this.type == types.BOT){
-          f=Math.sin(TIME/500)*10;
-          z=Math.cos(TIME/700)*5;
-          ctx.drawImage(img, 97, 56, 7, 2, w+hw+z, h*5, 30, 10);
-        }
+
         ctx.drawImage(img, this.sx, this.sy, w, h, hw+z, hh+f, w * s, h * s);
       }
       ctx.restore();
-      
-      // Moving Doors
-      if(this.type2 != null && this.mvY != 0){
-        ctx.translate(0,-48+this.mvY);
-        ctx.drawImage(img, 0, 16, w, h, hw, hh, w * s, h * s);
-        ctx.translate(0,48-this.mvY);
-        ctx.drawImage(img, this.sx, this.sy, w, h, hw, hh, w * s, h * s);
-      } else if(this.type3 != null && this.mvY != 0){
-        ctx.translate(0,64-(48-this.mvY));
-        ctx.drawImage(img, 112, 16, w, h, hw, hh, w * s, h * s);
-        ctx.translate(0,-64+(48-this.mvY));
-        ctx.drawImage(img, this.sx, this.sy, w, h, hw, hh, w * s, h * s);
-      } else if (this.type2 != null && this.renT2) {
-        ctx.globalAlpha = 1;
-        ctx.translate(0,-48);
-        ctx.drawImage(img, 0, 16, w, h, hw, hh, w * s, h * s);
-      }
 
       // SHOW TEXT
       if(this.showTextTime>0){
@@ -160,54 +129,18 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.isHero = function(){
     return this.type == types.HERO;
   }
-  
-  this.isDoor = function(){
-    return (this.type == types.DOOR || this.type == types.DOOR_BLOCK || this.type == types.DOOR_WALL);
-  }
-  
-  this.isDoorWall = function(){
-    return this.type == types.DOOR_WALL;
-  }
-  
-  this.isDoorTop = function(){
-    return this.type == types.DOOR_BLOCK;
-  }
-  
-  this.isBarrel = function(){
-    return this.type == types.BARREL;
-  }
-  
-  this.isTree = function(){
-    return this.type == types.TREE;
-  }
-  
+
   this.isTile = function(){
     return false;
   }
-  
-  this.isAmmo = function(){
-    return this.type == types.AMMO;
-  }
-  
-  this.isHP= function(){
-    return this.type == types.HP;
-  }
-  
-  this.isUpgrade = function(){
-    return this.type == types.UPGRADE;
-  }
-  
+
   this.setT = function(t){
     this.type = t;
     this.setType();
   }
-  
+
   this.isFloor = function(){
     return this.type == types.FLOOR;
-  }
-  
-  this.isPortal = function(){
-    return this.type == types.PC;
   }
 
   this.setType = function(){
@@ -215,7 +148,7 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
     this.sy=0;
     this.sx=0;
     this.isSolid = false;
-    
+
     switch(this.type) {
       case types.HERO:
         this.isSolid = true;
@@ -323,6 +256,6 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
         break;
      }
   }
-  
+
   this.setType();
 }

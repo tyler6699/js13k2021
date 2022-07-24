@@ -25,25 +25,7 @@ const types = {
   HP:25
 }
 
-const actions = {
-  GUN:0,
-  DESK:1,
-  CHAIR:2,
-  PC:3,
-  SERVER:4,
-  VEND:5,
-  AUTO:6,
-  UP:7
-}
-
 const mobtype = {
   FOLLOW:0,
   SIMPLE:1
-}
-
-const guntype = {
-  ONESHOT:0,
-  TWOSHOT:1,
-  THREESHOT:2,
-  MULTISHOT:3
 }
