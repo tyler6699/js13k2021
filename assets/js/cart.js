@@ -1,10 +1,9 @@
 function Cart() {
-  this.scale = 4;
   this.cube = 16; // width of tiles
-  this.scaled = this.scale*this.cube;
-  this.hero = new hero(16, 16, canvasW/2, canvasH/2, 0, types.HERO, this.scale);
+  this.scaled = this.cube;
+  this.hero = new hero(16, 16, canvasW/2, canvasH/2, 0, types.HERO);
   this.hero.e.x = 200;
-  this.hero.e.y=200;
+  this.hero.e.y = 200;
   this.surTiles = [-1,1,18,19,20,-18,-19,-20];
   this.introT=0;
   this.shake=0;
@@ -15,7 +14,7 @@ function Cart() {
   this.genLevel = function(num){
     this.bkcol = ranColor();
     this.levels = []; // Array to get tiles surrounding an entity
-    for(i=0;i<9;i++){
+    for(i=0;i<1;i++){
       var lvl = new level(num, canvasW, canvasH, i, this.scale);
       lvl.reset(i, this.scaled);
       this.levels.push(lvl);
@@ -46,7 +45,7 @@ function Cart() {
     this.hero.setCurrentTile(this.scaled);
 
     // Render back
-    drawRect(ctx, 80, 120, 0, 0, 1080, 710, this.bkcol, .8);
+    //drawRect(ctx, 80, 120, 0, 0, 1080, 710, this.bkcol, .8);
 
     this.level.draw(this.hero.e, delta);
 

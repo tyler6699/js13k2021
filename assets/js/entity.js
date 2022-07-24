@@ -1,13 +1,12 @@
-function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP = 0) {
-  this.scale = scale;
+function entity(w, h, x, y, angle, type, colour, isButton = false, maxHP = 0) {
   this.type = type;
   this.type2 = null;
   this.width = w;
   this.height = h;
   this.mhWidth = w / -2;
   this.mhHeight = h / -2;
-  this.mhWScaled = (w / -2) * scale;
-  this.mhHScaled = (h / -2) * scale;
+  this.mhWScaled = (w / -2);
+  this.mhHScaled = (h / -2);
   this.hWidth = w / 2;
   this.hHeight = h / 2;
   this.yOffset = 0;
@@ -56,15 +55,15 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
       this.hb.y = this.y - this.height;
     } else {
       // Images are all scaled up so hitboxes are also scaled up
-      this.hb.x = this.x + (this.scale/2);
-      this.hb.y = this.y + (this.scale/2);
-      this.hb.w = (this.width * this.scale) - this.scale;
-      this.hb.h = (this.height * this.scale) - this.scale;
+      this.hb.x = this.x;
+      this.hb.y = this.y;
+      this.hb.w = this.width;
+      this.hb.h = this.height;
 
       this.sensor.x = this.x-5;
       this.sensor.y = this.y-5;
-      this.sensor.w = (this.width * this.scale) + 10;
-      this.sensor.h = (this.height * this.scale) + 10;
+      this.sensor.w = this.width + 10;
+      this.sensor.h = this.height + 10;
     }
   }
 
@@ -80,7 +79,6 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
       ctx.globalAlpha = this.alpha;
 
       img = this.image;
-      s   = this.scale;
       mhw = this.mhWidth;
       mhh = this.mhHeight;
       hw  = this.hWidth;
@@ -97,19 +95,20 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
       // Animate Image
       if (this.image == null) {
         ctx.fillStyle = this.colour;
-        ctx.fillRect((mhw *.5) * s, (mhh * .5) * s, (w * .5) * s, (h * .5) * s);
+        ctx.fillRect((mhw *.5), (mhh * .5), (w * .5), (h * .5));
       // Image
       } else {
         if (this.flip){
-          ctx.scale(-1, 1); // TODO: Fix the drawImage, should not need to translate
+          ctx.scale(-1, 1);
           ctx.translate(-80,0);
         } else {
-          ctx.scale(1, 1);
+          ctx.scale(1,1);
         }
         f=0; // float
         z=0; // hover
 
-        ctx.drawImage(img, this.sx, this.sy, w, h, hw+z, hh+f, w * s, h * s);
+        drawImage(ctx, img, this.sx, this.sy, w, h, hw+z, hh+f, w, h, 1);
+        //ctx.drawImage(img, this.sx, this.sy, w, h, hw+z, hh+f, w * s, h * s);
       }
       ctx.restore();
 
@@ -136,7 +135,6 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
     return false;
   }
 
-
   this.isHP= function(){
     return this.type == types.HP;
   }
@@ -149,7 +147,6 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
   this.isFloor = function(){
     return this.type == types.FLOOR;
   }
-
 
   this.setType = function(){
     this.alpha = 1;

@@ -1,4 +1,4 @@
-function level(num, canvasW, canvasH, id, scale, noDoors = false) {
+function level(num, canvasW, canvasH, id, noDoors = false) {
   STAGE=num;
   this.tiles = [];
   this.breakTiles=[];
@@ -9,7 +9,6 @@ function level(num, canvasW, canvasH, id, scale, noDoors = false) {
   var levelArray;
 
   this.draw = function(hero, delta){
-    this.dTiles.forEach(e => e.update(delta));
     this.tiles.forEach(e => e.update(delta));
   }
 
@@ -20,44 +19,27 @@ function level(num, canvasW, canvasH, id, scale, noDoors = false) {
     var rows = 13;
     var cols = 19;
 
-    // Decor and back tiles
-    for (r = 0; r < rows; r++) {
-      for (c = 0; c < cols; c++) {
-        xx = c * scaled;
-        yy = r * scaled;
-      }
-    }
-
     // Main level tiles
+    var count = 0;
     for (r = 0; r < rows; r++) {
       for (c = 0; c < cols; c++) {
 
-        ts = tileSize * scale;
+        ts = tileSize;
         xx = c * ts;
         yy = r * ts;
         var tile;
-        var type = types.WALL;
+        var type = types.AIR;
         var angle = 0;
 
-        // Create a room
-        if(r == 2 && (c > 1 && c < 17)){
-          type = types.WALL;
-        } else if (r == 12 && (c > 0 && c < 18)){
-          type = types.WALL;
-        } else if(r == 0 || c == 0 || r == 12 || c == 18){
-          type = types.AIR;
-        } else if (isEdge(r,c)){
-          type = types.BLOCK;
-        } else {
-          type = types.AIR
-        }
+        //if(r == 0 && c == 0) {
+           type = types.BLOCK;
+        //} else {
+        //  type = types.WALL;
+        //}
 
+        count++;
         tile = new Tile(tileSize, xx, yy, angle, type, false, c, r);
         this.tiles.push(tile);
-      }
-      if(r==rows-1&&c==cols){
-        tin=0;
-        ammo=0;
       }
     }
 
@@ -65,15 +47,6 @@ function level(num, canvasW, canvasH, id, scale, noDoors = false) {
 
   function isAir(t){
       return t == types.AIR;
-  }
-
-  function isEdge(r,c){
-    return (c == 1) || (c == 17) || (r==1 && c == 1) || (r==1 && c == 17) || (r==1 && c > 1 && c < 17) ||
-           (r==11 && c == 17) || (r==11 && c == 1) || (r==11 && c > 1 && c < 17);
-  }
-
-  function inBounds(r,c){
-    return r > 2 && r<11 && c>1 && c<17;
   }
 
   this.addAir = function(t){

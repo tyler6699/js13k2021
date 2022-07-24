@@ -78,22 +78,24 @@ function warp(t) {
     Z=2**Math.tan(i/9+t/3)
 }
 
-function drawImage(c, image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight, scale, alpha){
+function drawImage(c, image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight, alpha){
   c.save();
+  c.scale(this.viewScale, this.viewScale);
   c.globalAlpha = alpha;
-  //c.translate(x, y); Why is this used for the mobs?
+  //c.translate(x, y); //Why is this used for the mobs?
+  //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
   c.drawImage(image, sx, sy, sWidth, sHeight, dx*aspectRatio, dy*aspectRatio, dWidth*aspectRatio, dHeight*aspectRatio);
   c.restore();
 }
 
 // TODO: Remove?
-function drawImg(ctx, img, sx, sy, w, h, x, y, alpha, scale){
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.translate(x, y);
-  ctx.drawImage(img, sx, sy, w, h, w/2*scale, h/2*scale, w * scale, h * scale);
-  ctx.restore();
-}
+// function drawImg(ctx, img, sx, sy, w, h, x, y, alpha, scale){
+//   ctx.save();
+//   ctx.globalAlpha = alpha;
+//   ctx.translate(x, y);
+//   ctx.drawImage(img, sx, sy, w, h, w/2*scale, h/2*scale, w * scale, h * scale);
+//   ctx.restore();
+// }
 
 function drawBox(ctx,a,colour,x,y,w,h) {
   ctx.globalAlpha = a;
@@ -129,10 +131,11 @@ function resizeCanvas(){
 
   ctx.canvas.width = GAME_WIDTH * aspectRatio;
   ctx.canvas.height = GAME_HEIGHT * aspectRatio;
-  console.log("Canvas width: " + ctx.canvas.width + " Screen Width: " + canvasW);
-  console.log("Canvas height: " + ctx.canvas.height + " Screen Height: " + canvasH);
   ctx.mozImageSmoothingEnabled = false;
   ctx.webkitImageSmoothingEnabled = false;
   ctx.imageSmoothingEnabled = false;
   ctx.save;
+
+  // this.cart.hero.e.x *= this.aspectRatio;
+  // this.cart.hero.e.y =  this.cart.hero.e.y*this.aspectRatio;
 }

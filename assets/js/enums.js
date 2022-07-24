@@ -7,7 +7,8 @@ const types = {
   GRID_3:6,
   GRID_4:7,
   WALL:8,
-  HP:25
+  HP:25,
+  BLOCK:9
 }
 
 const actions = {

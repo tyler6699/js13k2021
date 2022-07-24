@@ -1,5 +1,5 @@
-function hero(w, h, x, y, angle, type, scale) {
-  this.e = new entity(w, h, x, y, angle, type, "", scale, false, 100);
+function hero(w, h, x, y, angle, type) {
+  this.e = new entity(w, h, x, y, angle, type, "", false, 100);
   this.e.hp=100;
   this.speed=5;
   this.currentTile=null;
@@ -14,12 +14,12 @@ function hero(w, h, x, y, angle, type, scale) {
       speak("Oh no! You have failed to escape the planet.");
     }
     if(this.e.idle > 3){
-      this.e.sx=128;
-      this.e.sy=0;
-      if(this.e.showTextTime<=0){
-        this.e.showText="Z";
-        this.e.showTextTime=2;
-      }
+      // this.e.sx=128;
+      // this.e.sy=0;
+      // if(this.e.showTextTime<=0){
+      //   this.e.showText="Z";
+      //   this.e.showTextTime=2;
+      // }
     } else {
       this.e.sx=96;
       this.e.sy=16;
@@ -32,7 +32,7 @@ function hero(w, h, x, y, angle, type, scale) {
     // Set Hero Current Tile
     heroRow = Math.floor((this.e.y - this.e.mhHScaled) / scaled);
     heroCol = Math.floor((this.e.x - this.e.mhWScaled) / scaled);
-    heroTileIndex = heroCol + (19*heroRow);
+    heroTileIndex = heroCol + (19*heroRow); //TODO: move col count to variable so it doesnt break stuff
     if(this.currentTile != null) this.prevTile = this.currentTile;
     this.currentTile = cart.level.tiles[heroTileIndex];
 
@@ -61,19 +61,20 @@ function hero(w, h, x, y, angle, type, scale) {
 
       for (var t = 0; t < this.e.colArr.length; t++) {
         obj = this.e.colArr[t];
-        e = obj.entity;
-
-        if(obj.isTile()){
-          if(!stop && rectColiding(e.hb,rec)){
-            if(obj.active && e.isSolid){
+        if(obj != null){
+          e = obj.entity;
+          if(obj.isTile()){
+            if(!stop && rectColiding(e.hb,rec)){
+              if(obj.active && e.isSolid){
+                canMove = false;
+                break;
+              }
+            }
+          } else { // MOB
+            if(!stop && obj.active && obj.isSolid && rectColiding(obj.hb, rec)){
               canMove = false;
               break;
             }
-          }
-        } else { // MOB
-          if(!stop && obj.active && obj.isSolid && rectColiding(obj.hb, rec)){
-            canMove = false;
-            break;
           }
         }
       }

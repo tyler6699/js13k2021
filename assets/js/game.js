@@ -1,7 +1,15 @@
 // ╔═══════════════════════════════╗
 // ║ JS13K Entry by @CarelessLabs  ║
 // ╚═══════════════════════════════╝
-var scale = 1;
+
+// IDEAS
+
+// Nuclear Melt down simulator
+// Run around doing tasks to stop a melt DOWN
+// Make decisions on number of deaths
+// Mini games to fix things
+// Control panel of lights and switches
+var vs=4;
 var mg;
 var canvasW;
 var canvasH;
@@ -9,7 +17,7 @@ var border=10;
 var GAME_WIDTH = 800;
 var GAME_HEIGHT = 600;
 var aspectRatio;
-var gameStarted = false;
+var gameStarted = true;
 var delta = 0.0;
 var prevDelta = Date.now();
 var currentDelta = Date.now();
@@ -50,7 +58,6 @@ var mg = {
   start: function() {
     this.context = this.canvas.getContext("2d");
     ctx=this.context;
-    ctx.scale(1, 1);
     resizeCanvas();
     this.canvas.classList.add("screen");
     document.body.insertBefore(this.canvas, document.body.childNodes[6]);
@@ -147,7 +154,7 @@ function updateGameArea() {
     mg.clear();
     ctx = mg.context;
     ctx.save();
-    var b= 100* aspectRatio;
+    var b = 100* aspectRatio;
     drawBox(ctx,0.5,"#"+COL1,0,0,100,200);
     txt = "[ CLICK TO START ]";
     writeTxt(ctx, 1, "italic 50px Arial","WHITE",txt, 100, 100);
@@ -162,23 +169,8 @@ function updateGameArea() {
     t = TIME/1e3;
     x = (1232/2)-128+Math.cos(t)*40;
     y = (846/2)-128+Math.sin(t)*20;
-    drawImage(ctx, cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208, scale, 1);
-    drawImage(ctx, cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256, scale, 1);
-  } else if(cart.hero.levelUp && STAGE <= 4){
-    mg.clear();
-    warp(TIME/100);
-    t = TIME/1e3;
-    x = (1232/2)-128+Math.cos(t)*40;
-    y = (846/2)-128+Math.sin(t)*20;
-    ctx.globalAlpha = 1;
-
-    drawImage(ctx, cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256, scale, 1);
-    cart.hero.levelUpTime+=delta/1000;
-    if(cart.hero.levelUpTime>2){
-      cart.hero.levelUpTime=0;
-      cart.hero.levelUp=false;
-      speak("level " + STAGE + " completed.");
-    }
+    drawImage(ctx, cart.hero.e.image, 96, 16, 16, 13, x-80, y+40, 256, 208, 1);
+    drawImage(ctx, cart.hero.e.image, 32, 48, 16, 16, x, y, 256, 256, 1);
   } else {
     mg.clear();
     cart.update(delta / 1e3, TIME);
