@@ -1,6 +1,5 @@
 function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP = 0) {
   this.scale = scale;
-  this.flipW=85;
   this.type = type;
   this.width = w;
   this.height = h;
@@ -92,7 +91,6 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
         ctx.translate(cart.shake,cart.shake);
       }
 
-      var offset=0;
       ctx.save();
       // Animate Image
       if (this.image == null) {
@@ -101,8 +99,8 @@ function entity(w, h, x, y, angle, type, colour, scale, isButton = false, maxHP 
       // Image
       } else {
         if (this.flip){
-          ctx.scale(-1, 1); // TODO: Fix the drawImage, should not need to translate
-          ctx.translate((-(this.scale/4)*this.flipW),0);
+          ctx.scale(-1, 1);
+          ctx.translate(-(w*s)-w,0);
         } else {
           ctx.scale(1, 1);
         }
