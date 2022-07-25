@@ -2,25 +2,9 @@ function hero(w, h, x, y, angle, type, scale) {
   this.e = new entity(w, h, x, y, angle, type, "", scale, false, 100);
   this.e.hp=100;
   this.speed=5;
-  this.door=null;
   this.currentTile=null;
 
   this.update = function(delta) {
-    if(this.e.hp<= 0){
-      GAMEOVER=true;
-      speak("Oh no! You have failed to escape the planet.");
-    }
-    if(this.e.idle > 3){
-      this.e.sx=128;
-      this.e.sy=0;
-      if(this.e.showTextTime<=0){
-        this.e.showText="Z";
-        this.e.showTextTime=2;
-      }
-    } else {
-      this.e.sx=96;
-      this.e.sy=16;
-    }
     this.time+=delta;
     this.e.update(delta);
   }
